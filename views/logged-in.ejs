@@ -9,7 +9,7 @@
 </head>
 <body>
     <h1>Grattis <span style="<%=style%>">  <%= name %> </span>du är inloggad</h1>
-    <button onclick="getUserName()">username</button>
+    <button onclick="getUserName()">Hämta namn</button>
     <script>
         function getUserName(){
             fetch('http://localhost:3000/api/getuser')
