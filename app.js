@@ -5,12 +5,18 @@ const port = 3000;
 var mysql = require('mysql');
 const session = require('express-session')
 let bodyParser = require('body-parser');
+const { request } = require('express');
 
 
 app.use(express.static("public"));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+//Set EJS as the view engine
+app.set('view engine', 'ejs');
+
+app.set('views', './views');
 
 app.use(
     session({
@@ -30,7 +36,12 @@ var connection = mysql.createConnection({
 });
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/views/index.html');
+    const data ={
+        title: 'Welcome',
+        style: 'color: red'
+    }
+    res.render('index', data);
+    // res.sendFile(__dirname + '/views/html/index.html');
 })
 app.get('/api/getuser', (req, res) => {
     res.json('{"name": "Gustav"}');
@@ -48,7 +59,11 @@ connection.connect(function (err) {
 // När man loggat in
 app.get('/logged-in', (req, res) => {
     if(req.session.authenticated){
-        res.sendFile(__dirname + '/views/logged-in.html');
+        const data = {
+            name: "Hampus",
+            style: 'color: red'
+        }
+        res.render('logged-in', data)
     }else{
         res.redirect('/login');
     }
@@ -56,12 +71,10 @@ app.get('/logged-in', (req, res) => {
 
 app.get('/login', (req, res) => {
     console.log(req.body);
-    res.sendFile(__dirname + '/views/login.html');
+    res.render('login');
 })
 
 app.post('/login', (req, res) => {
-    // console.log(req.body);
-
     const email = req.body.email;
     const password = req.body.password;
     
